@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="data-surface"></dom-module>
+
+<script>
+  'use strict';
+
+  (function() {
+    class DataSurface {
+      beforeRegister() {
+        this.is = 'data-surface';
+        
+        this.properties = {
+          actionables: {
+            type: Array,
+            notify: true
+          },
+          
+          selectedActionable: {
+            type: Object,
+            notify: true
+          },
+            
+          idFromHash: {
+            type: String
+          }
+        };       
+      }
+      
+      attached() {
+        addEventListener('hashchange', () => {
+          this._setIdFromHash();
+          if (this.selectedActionable && this.idFromHash !== this.selectedActionable.id) {
+            this._loadActionable();
+          }
+        });
+        addEventListener('delete-action', e => {
+          this._delete(e.detail.id);
+        });
+        this.async(() => {
+          var items = [{
+            'id': 'One',
+            'title': 'One'
+           }, {
+            'id': 'Two',
+            'title': 'Two'
+           }, {
+            'id': 'Three',
+            'title': 'Three'
+           }];
+          this.set('actionables', items);
+        });
+      }
+      
+      _setIdFromHash() {
+        var hash = window.location.hash;
+        if (hash.length < 3) {
+          return;
+        }
+        this.idFromHash = hash.substring(2, hash.length);
+      }
+      
+      _loadActionable() {
+        for (let a of this.actionables) {
+          if (a.id === this.idFromHash) {
+            this.set('selectedActionable', a);
+            break;
+          }
+        }
+      }
+    
+      _delete(id) {
+        if (id === this.selectedActionable.id) {
+          var index = this.actionables.indexOf(this.selectedActionable);
+          this.splice('actionables', index, 1);
+         // this.arrayDelete('actionables', this.selectedActionable);
+         // this.set('selectedActionable', null);
+        }
+      }
+      
+    }
+    
+    new Polymer(DataSurface);
+    
+  })();
+</script>
+
+

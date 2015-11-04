@@ -1,0 +1,50 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../one-line-text-editor/one-line-text-editor.html">
+
+<dom-module id="actionable-view">
+  <template>
+    <style>
+      :host {
+        @apply(--layout-vertical);
+        @apply(--layout-flex);
+        background-color: var(--primary-background-color);
+      }
+
+      #name {
+        --paper-input-container-focus-color: var(--primary-color);
+        --paper-input-container-input-color: var(--dark-primary-color);
+        --paper-input-container-color: var(--primary-background-color);
+        --paper-input-container-input: {
+          font-size: 24px;
+          font-weight: 300;
+        }
+      }
+
+    </style>
+
+    <paper-input id="name" value="{{actionable.title}}"></paper-input>
+
+  </template>
+
+  <script>
+    'use strict';
+
+    (function() {
+      class ActionableView {
+        beforeRegister() {
+          this.is = 'actionable-view';
+
+          this.properties = {
+            actionable: {
+              type: Object,
+              notify: true
+            }
+          };
+        }
+      }
+        
+      new Polymer(ActionableView);
+
+    })();
+  </script>
+</dom-module>

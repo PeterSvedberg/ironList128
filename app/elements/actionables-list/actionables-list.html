@@ -1,0 +1,131 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="actionables-list">
+  <template>
+    <style>
+      :host {
+        @apply(--layout-vertical);
+        background-color: var(--primary-background-color);
+        height: 100%;
+        --iron-list-items-container: {
+          /* styles the container for the items*/
+        };
+      }
+      
+      .item {
+        @apply(--layout-horizontal);
+        padding: 8px 0px 8px 16px;
+        background-color: var(--primary-background-color);
+        border-bottom: 1px solid var(--light-divider-color);
+        font-weight: 300;
+      }
+  
+      .item:focus {
+        outline: 0;
+      }
+
+      .item.active {
+      }
+
+      .actionable-name {
+        @apply(--layout-flex);
+        color: var(--primary-text-color);
+        font-size: 18px;
+        text-decoration: none;
+      }
+      
+      .item.active .actionable-name {
+        color: var(--dark-primary-color);
+        font-weight: normal;
+      }
+
+    </style>
+
+      <iron-list id="ironList" items="{{actionables}}" as="item" selection-enabled
+                 selected-item="{{selectedActionable}}">
+        <template>
+          <div>
+            <div id$="[[item.id]]" class$="[[_computeClass(selected)]]">
+              <span class="actionable-name">{{item.title}}</span>
+              <iron-icon icon="remove" on-tap="_onDelete"></iron-icon>
+            </div>
+          </div>
+        </template>
+      </iron-list>
+      
+  </template>
+  
+  <script>
+    'use strict';
+
+    (function() {
+      class ActionablesList {
+        beforeRegister() {
+          this.is = 'actionables-list';
+  
+          this.properties = {
+            actionables: {
+              type: Array,
+              value: () => [],
+              notify: true,
+              observer: '_actionablesChanged'
+            },
+    
+            selectedActionable: {
+              type: Object,
+              value: () => {},
+              notify: true,
+              observer: '_selectedActionableChanged'
+            },
+
+            selectionChangeOriginatedHere: false,
+            
+            observers: [
+              '_actionablesAddedOrDeleted(actionables.splices)'
+            ]
+
+          };
+
+        }
+        
+        _actionablesAddedOrDeleted(changeRecord) {
+          console.log('actionablesAddedOrDeleted ' + changeRecord);
+        }
+
+        _actionablesChanged() {
+          console.log('_actionablesChanged');
+        }
+
+        _selectedActionableChanged() {
+          if (this.selectedActionable) {
+            console.log('list, selected item changed, item.title is ' + this.selectedActionable.title);
+            if (this.selectionChangeOriginatedHere) {
+              window.location.hash = `!${this.selectedActionable.id}`;
+            }
+            this.selectionChangeOriginatedHere = false;
+          } else {
+            console.log('list, selected item changed, item is ' + this.selectedActionable);
+            this.selectionChangeOriginatedHere = true;
+          }
+        }
+
+        _computeClass(isSelected) {
+          var classes = 'item';
+          if (isSelected) {
+            classes += ' active';
+          }
+          return classes;
+        }
+
+        _onDelete(e) {
+          e.stopPropagation();
+          this.fire('delete-action', {'id': this.selectedActionable.id});
+        }
+
+      }
+
+      new Polymer(ActionablesList);
+
+    })();
+  </script>
+</dom-module>
