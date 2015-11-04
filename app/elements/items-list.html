@@ -7,9 +7,9 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 
-<dom-module id="actionables-list">
+<dom-module id="items-list">
   <template>
     <style>
       :host {
@@ -36,26 +36,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .item.active {
       }
 
-      .actionable-name {
+      .item-name {
         @apply(--layout-flex);
         color: var(--primary-text-color);
         font-size: 18px;
         text-decoration: none;
       }
       
-      .item.active .actionable-name {
+      .item.active .item-name {
         color: var(--dark-primary-color);
         font-weight: normal;
       }
 
     </style>
 
-      <iron-list id="ironList" items="{{actionables}}" as="item" selection-enabled
-                 selected-item="{{selectedActionable}}">
+      <iron-list id="ironList" items="{{items}}" as="item" selection-enabled
+                 selected-item="{{selectedItem}}">
         <template>
           <div>
             <div id$="[[item.id]]" class$="[[_computeClass(selected)]]">
-              <span class="actionable-name">{{item.title}}</span>
+              <span class="item-name">{{item.title}}</span>
               <iron-icon icon="remove" on-tap="_onDelete"></iron-icon>
             </div>
           </div>
@@ -68,46 +68,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     'use strict';
 
     (function() {
-      class ActionablesList {
+      class ItemsList {
         beforeRegister() {
-          this.is = 'actionables-list';
+          this.is = 'items-list';
   
           this.properties = {
-            actionables: {
+            items: {
               type: Array,
               value: () => [],
               notify: true,
-              observer: '_actionablesChanged'
+              observer: '_itemsChanged'
             },
     
-            selectedActionable: {
+            selectedItem: {
               type: Object,
               value: () => {},
               notify: true,
-              observer: '_selectedActionableChanged'
+              observer: '_selectedItemChanged'
             },
 
             selectionChangeOriginatedHere: false,
           };
 
           this.observers = [
-              '_actionablesAddedOrDeleted(actionables.splices)'
+              '_itemsAddedOrDeleted(items.splices)'
           ];
         }
         
-        _actionablesAddedOrDeleted(changeRecord) {
-          console.log('actionablesAddedOrDeleted ' + changeRecord);
+        _itemsAddedOrDeleted(changeRecord) {
+          console.log('itemsAddedOrDeleted ' + changeRecord);
         }
 
-        _actionablesChanged() {
-          console.log('_actionablesChanged');
+        _itemsChanged() {
+          console.log('_itemsChanged');
         }
 
-        _selectedActionableChanged() {
-          if (this.selectedActionable) {
-            console.log('list, selected item changed, item.title is ' + this.selectedActionable.title);
+        _selectedItemChanged() {
+          if (this.selectedItem) {
+            console.log('list, selected item changed, item.title is ' + this.selectedItem.title);
             if (this.selectionChangeOriginatedHere) {
-              window.location.hash = `!${this.selectedActionable.id}`;
+              window.location.hash = `!${this.selectedItem.id}`;
             }
             this.selectionChangeOriginatedHere = false;
           } else {
@@ -126,12 +126,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         _onDelete(e) {
           e.stopPropagation();
-          this.fire('delete-action', {'id': this.selectedActionable.id});
+          this.fire('delete-action', {'id': this.selectedItem.id});
         }
 
       }
 
-      new Polymer(ActionablesList);
+      new Polymer(ItemsList);
 
     })();
   </script>

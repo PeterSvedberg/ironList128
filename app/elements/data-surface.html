@@ -7,7 +7,7 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 
 <dom-module id="data-surface"></dom-module>
 
@@ -20,12 +20,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.is = 'data-surface';
         
         this.properties = {
-          actionables: {
+          items: {
             type: Array,
             notify: true
           },
           
-          selectedActionable: {
+          selectedItem: {
             type: Object,
             notify: true
           },
@@ -39,8 +39,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       attached() {
         addEventListener('hashchange', () => {
           this._setIdFromHash();
-          if (this.selectedActionable && this.idFromHash !== this.selectedActionable.id) {
-            this._loadActionable();
+          if (this.selectedItem && this.idFromHash !== this.selectedItem.id) {
+            this._loadItem();
           }
         });
         addEventListener('delete-action', e => {
@@ -57,7 +57,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             'id': 'Three',
             'title': 'Three'
            }];
-          this.set('actionables', items);
+          this.set('items', items);
         });
       }
       
@@ -69,19 +69,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.idFromHash = hash.substring(2, hash.length);
       }
       
-      _loadActionable() {
-        for (let a of this.actionables) {
+      _loadItem() {
+        for (let a of this.items) {
           if (a.id === this.idFromHash) {
-            this.set('selectedActionable', a);
+            this.set('selectedItem', a);
             break;
           }
         }
       }
     
       _delete(id) {
-        if (id === this.selectedActionable.id) {
-          var index = this.actionables.indexOf(this.selectedActionable);
-          this.splice('actionables', index, 1);
+        if (id === this.selectedItem.id) {
+          var index = this.items.indexOf(this.selectedItem);
+          this.splice('items', index, 1);
         }
       }
       

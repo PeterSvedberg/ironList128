@@ -7,16 +7,19 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../one-line-text-editor/one-line-text-editor.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 
-<dom-module id="actionable-view">
+<dom-module id="item-view">
   <template>
     <style>
       :host {
         @apply(--layout-vertical);
         @apply(--layout-flex);
         background-color: var(--primary-background-color);
+      }
+
+      paper-input {
+        margin: 0 16px;
       }
 
       #name {
@@ -31,7 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <paper-input id="name" value="{{actionable.title}}"></paper-input>
+    <paper-input id="name" value="{{item.title}}"></paper-input>
 
   </template>
 
@@ -39,12 +42,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     'use strict';
 
     (function() {
-      class ActionableView {
+      class ItemView {
         beforeRegister() {
-          this.is = 'actionable-view';
+          this.is = 'item-view';
 
           this.properties = {
-            actionable: {
+            item: {
               type: Object,
               notify: true
             }
@@ -52,7 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
         
-      new Polymer(ActionableView);
+      new Polymer(ItemView);
 
     })();
   </script>
